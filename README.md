@@ -2,8 +2,8 @@
 
 **YT Lite Enhancer** is a lightweight, performance-focused Chrome extension designed to improve your YouTube viewing experience. It provides seamless video speed control and a distraction-free "Windowed Mode" without bloating your browser.
 
-![yt-lite-enhancer-ss](yt-ss.png)
-![options-page-ss](options-ss.png)
+![yt-lite-enhancer-ss](screenshots/yt-ss.png)
+![options-page-ss](screenshots/options-ss.png)
 
 ## Features
 
