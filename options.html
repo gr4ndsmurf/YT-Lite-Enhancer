@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT Lite Enhancer Settings</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            display: flex;
+            justify-content: center;
+            padding-top: 40px;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 340px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .logo {
+            width: 56px;
+            height: 56px;
+            color: #ff0000;
+            margin-bottom: 8px;
+        }
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            color: #1d1d1f;
+        }
+        .section {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #86868b;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #0071e3;
+        }
+        button {
+            width: 100%;
+            background: #0071e3;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0077ed;
+        }
+        #status {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #2ecc71;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- SVG Icon Embedded -->
+            <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="4" ry="4"></rect>
+                <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"></polygon>
+            </svg>
+            <h1>YT Lite Enhancer</h1>
+        </div>
+
+        <div class="section">
+            <label>Speed Up (Key & Value)</label>
+            <div class="row">
+                <input type="text" id="keyFast" placeholder="Key (e.g. d)" maxlength="1">
+                <input type="number" id="valFast" placeholder="Step (e.g. 0.1)" step="0.1">
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Slow Down (Key & Value)</label>
+            <div class="row">
+                <input type="text" id="keySlow" placeholder="Key (e.g. s)" maxlength="1">
+                <input type="number" id="valSlow" placeholder="Step (e.g. 0.1)" step="0.1">
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Reset Speed Shortcut</label>
+            <div class="row">
+                <input type="text" id="keyReset" placeholder="Key (e.g. r)" maxlength="1">
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Windowed Mode Shortcut</label>
+            <div class="row">
+                <input type="text" id="keyWindowed" placeholder="Key (e.g. w)" maxlength="1">
+            </div>
+        </div>
+
+        <button id="save">Save Settings</button>
+        <div id="status"></div>
+    </div>
+    <script src="options.js"></script>
+</body>
+</html>
