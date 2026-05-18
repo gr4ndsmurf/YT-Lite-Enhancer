@@ -13,6 +13,11 @@ let savedPlaylistSpeed = 1.0;
 let savedListId = null;
 let saveTimer = null;
 
+// Audio routing variables
+let isMono = false;
+let audioCtx = null;
+let gainNode = null;
+
 // UI Elements (Lazy Loaded)
 let controller = null;
 let shadow = null;
@@ -123,11 +128,12 @@ function ensureUI() {
         }
         :host(.visible) { opacity: 1; pointer-events: auto; transform: scale(1); }
         button {
-            background: transparent; border: none; color: #fff; cursor: pointer;
+            background: #000; border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer;
             padding: 4px; border-radius: 4px; display: flex;
-            align-items: center; justify-content: center; transition: background 0.2s;
+            align-items: center; justify-content: center; transition: all 0.2s;
+            margin: 0 2px;
         }
-        button:hover { background: rgba(255,255,255,0.2); color: #4db8ff; }
+        button:hover { background: #222; color: #4db8ff; border-color: rgba(255,255,255,0.3); }
         #win-btn:hover { color: #55efc4; } 
         span { color: #fff; font-weight: 600; font-size: 13px; min-width: 36px; text-align: center; margin: 0 4px; user-select: none; }
         .separator { width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px; }
@@ -142,6 +148,7 @@ function ensureUI() {
         <button id="plus">${icons.plus}</button>
         <button id="reset">${icons.reset}</button>
         <div class="separator"></div>
+        <button id="mono-btn" title="Stereo/Mono" style="font-size: 11px; font-weight: bold; width: 50px;">STEREO</button>
         <button id="screenshot" title="Ekran Görüntüsü">${icons.camera}</button>
         <button id="win-btn">${icons.windowed}</button>
     `;
@@ -155,6 +162,7 @@ function ensureUI() {
     const btnMinus = shadow.getElementById('minus');
     const btnPlus = shadow.getElementById('plus');
     const btnReset = shadow.getElementById('reset');
+    const btnMono = shadow.getElementById('mono-btn');
     const btnScreenshot = shadow.getElementById('screenshot');
     const btnWin = shadow.getElementById('win-btn');
 
@@ -165,6 +173,7 @@ function ensureUI() {
     btnMinus.addEventListener('click', (e) => { e.stopPropagation(); if(currentVideo) setSpeed(currentVideo, currentVideo.playbackRate - settings.valSlow); });
     btnPlus.addEventListener('click', (e) => { e.stopPropagation(); if(currentVideo) setSpeed(currentVideo, currentVideo.playbackRate + settings.valFast); });
     btnReset.addEventListener('click', (e) => { e.stopPropagation(); if(currentVideo) setSpeed(currentVideo, 1.0); });
+    btnMono.addEventListener('click', (e) => { e.stopPropagation(); if(currentVideo) toggleMono(currentVideo); });
     btnScreenshot.addEventListener('click', (e) => { e.stopPropagation(); if(currentVideo) takeScreenshot(currentVideo); });
     btnWin.addEventListener('click', (e) => { e.stopPropagation(); toggleWindowed(); });
 
@@ -220,6 +229,62 @@ function toggleWindowed() {
 
     window.dispatchEvent(new Event('resize'));
     if(currentVideo) setTimeout(() => positionController(currentVideo), 100);
+}
+
+function toggleMono(video) {
+    if (!video) return;
+    
+    isMono = !isMono;
+    
+    if (shadow) {
+        const btnMono = shadow.getElementById('mono-btn');
+        if (btnMono) {
+            btnMono.textContent = isMono ? 'MONO' : 'STEREO';
+            btnMono.style.color = isMono ? '#55efc4' : '#fff';
+        }
+    }
+    
+    applyAudioState(video);
+}
+
+function applyAudioState(video) {
+    if (!video) return;
+
+    if (isMono) {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        
+        if (!video._ytLiteSource) {
+            try {
+                video._ytLiteSource = audioCtx.createMediaElementSource(video);
+            } catch (e) {
+                console.error("YT-Lite-Enhancer: Audio routing failed", e);
+                return;
+            }
+        }
+        
+        if (!gainNode) {
+            gainNode = audioCtx.createGain();
+            gainNode.connect(audioCtx.destination);
+        }
+        
+        if (!video._ytLiteConnected) {
+            video._ytLiteSource.connect(gainNode);
+            video._ytLiteConnected = true;
+        }
+
+        gainNode.channelCount = 1;
+        gainNode.channelCountMode = 'explicit';
+    } else {
+        if (gainNode) {
+            gainNode.channelCount = 2;
+            gainNode.channelCountMode = 'max';
+        }
+    }
 }
 
 function takeScreenshot(video) {
@@ -284,6 +349,15 @@ function showController(video) {
     positionController(video);
     controller.classList.add('visible');
     clearTimeout(hideTimer);
+    
+    // Ensure correct mono button state when controller shows on a new video
+    if (shadow) {
+        const btnMono = shadow.getElementById('mono-btn');
+        if (btnMono) {
+            btnMono.textContent = isMono ? 'MONO' : 'STEREO';
+            btnMono.style.color = isMono ? '#55efc4' : '#fff';
+        }
+    }
 }
 
 function hideController() {
@@ -302,11 +376,16 @@ document.addEventListener('mouseout', (e) => {
     if (e.target.tagName === 'VIDEO') hideController();
 });
 
-// Persistent Speed: Apply to new videos
+// Persistent Speed and Audio: Apply to new videos
 document.addEventListener('loadeddata', (e) => {
     const currentListId = getListId();
-    if (e.target.tagName === 'VIDEO' && currentListId && currentListId === savedListId) {
-        e.target.playbackRate = savedPlaylistSpeed;
+    if (e.target.tagName === 'VIDEO') {
+        if (currentListId && currentListId === savedListId) {
+            e.target.playbackRate = savedPlaylistSpeed;
+        }
+        if (isMono) {
+            applyAudioState(e.target);
+        }
     }
 }, true);
 

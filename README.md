@@ -19,7 +19,10 @@ You can speed up or slow down videos with hotkeys or the overlay buttons. But he
 ### 3. Quick Screenshots 📸
 Ever wanted to save a frame from a video? There's a camera button now. Click it, and it instantly saves the frame as a high-quality PNG. No more Print Screen + Cropping in Paint.
 
-### 4. Zero Performance Impact ⚡
+### 4. Audio Channel Control (Mono/Stereo) 🎧
+Listening to a video where the audio only plays in one ear? Click the `STEREO` button on the overlay to seamlessly downmix the audio into `MONO`. Perfect for fixing poorly balanced audio tracks or podcasts.
+
+### 5. Zero Performance Impact ⚡
 I hate extensions that eat up RAM.
 - **Lazy Loading:** The control panel doesn't even exist until you hover over a video. If you're on a page with no video, this extension uses **0% resources**.
 - ** optimized:** It uses `sessionStorage` and singleton patterns to make sure it's as light as a feather.
