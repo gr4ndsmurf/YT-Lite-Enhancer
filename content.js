@@ -149,7 +149,7 @@ function ensureUI() {
         <button id="reset">${icons.reset}</button>
         <div class="separator"></div>
         <button id="mono-btn" title="Stereo/Mono" style="font-size: 11px; font-weight: bold; width: 50px;">STEREO</button>
-        <button id="screenshot" title="Ekran Görüntüsü">${icons.camera}</button>
+        <button id="screenshot" title="Screenshot">${icons.camera}</button>
         <button id="win-btn">${icons.windowed}</button>
     `;
 
@@ -189,9 +189,9 @@ function updateButtonTitles() {
     const btnReset = shadow.getElementById('reset');
 
     if(btnWin) btnWin.title = `Windowed Mode (${settings.keyWindowed.toUpperCase()})`;
-    if(btnMinus) btnMinus.title = `Yavaşlat (${settings.keySlow.toUpperCase()})`;
-    if(btnPlus) btnPlus.title = `Hızlandır (${settings.keyFast.toUpperCase()})`;
-    if(btnReset) btnReset.title = `Sıfırla (${settings.keyReset.toUpperCase()})`;
+    if(btnMinus) btnMinus.title = `Slower (${settings.keySlow.toUpperCase()})`;
+    if(btnPlus) btnPlus.title = `Faster (${settings.keyFast.toUpperCase()})`;
+    if(btnReset) btnReset.title = `Reset (${settings.keyReset.toUpperCase()})`;
 }
 
 // --- 4. LOGIC & FUNCTIONS ---

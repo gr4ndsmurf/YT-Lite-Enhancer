@@ -1,9 +1,9 @@
 // Default settings
 const defaultSettings = {
   keySlow: 's',
-  valSlow: 0.1,
+  valSlow: 0.25,
   keyFast: 'd',
-  valFast: 0.1,
+  valFast: 0.25,
   keyReset: 'r',
   keyWindowed: 'w' // New setting
 };
@@ -33,7 +33,7 @@ document.getElementById('save').addEventListener('click', () => {
 
   chrome.storage.sync.set(settings, () => {
     const status = document.getElementById('status');
-    status.textContent = 'Ayarlar kaydedildi!';
+    status.textContent = 'Settings saved!';
     setTimeout(() => { status.textContent = ''; }, 1500);
   });
 });
