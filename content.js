@@ -135,7 +135,7 @@ function ensureUI() {
         }
         button:hover { background: #222; color: #4db8ff; border-color: rgba(255,255,255,0.3); }
         #win-btn:hover { color: #55efc4; } 
-        span { color: #fff; font-weight: 600; font-size: 13px; min-width: 36px; text-align: center; margin: 0 4px; user-select: none; }
+        span { background: #000; padding: 4px; border-radius: 4px; color: #fff; font-weight: 600; font-size: 13px; min-width: 36px; text-align: center; margin: 0 4px; user-select: none; }
         .separator { width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px; }
     `;
 
