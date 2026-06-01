@@ -311,6 +311,10 @@ function takeScreenshot(video) {
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url); // GC
+            
+            // Optimization: Release canvas RAM immediately
+            screenshotCanvas.width = 0;
+            screenshotCanvas.height = 0;
         }, 'image/png');
     } catch (e) {
         console.error('Screenshot failed:', e);
@@ -366,20 +370,23 @@ function hideController() {
     }, 600);
 }
 
-// --- 5. GLOBAL LISTENERS (Lightweight) ---
+// --- 5. GLOBAL LISTENERS & EVENTS ---
 
-document.addEventListener('mouseover', (e) => {
-    if (e.target.tagName === 'VIDEO') showController(e.target);
-}, true);
+function attachVideoListeners(video) {
+    if (!video || video._ytLiteHoverAttached) return;
+    video.addEventListener('mouseenter', () => showController(video));
+    video.addEventListener('mouseleave', () => hideController());
+    video._ytLiteHoverAttached = true;
+}
 
-document.addEventListener('mouseout', (e) => {
-    if (e.target.tagName === 'VIDEO') hideController();
-});
+// Find existing videos on script load
+document.querySelectorAll('video').forEach(attachVideoListeners);
 
 // Persistent Speed and Audio: Apply to new videos
 document.addEventListener('loadeddata', (e) => {
     const currentListId = getListId();
     if (e.target.tagName === 'VIDEO') {
+        attachVideoListeners(e.target);
         if (currentListId && currentListId === savedListId) {
             e.target.playbackRate = savedPlaylistSpeed;
         }
